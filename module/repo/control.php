@@ -225,7 +225,7 @@ class repo extends control
         foreach($revisions as $log)
         {
             if($revision == 'HEAD' and $i == 0) $revision = $log->revision;
-            if($revision == $log->revision) $revisionName = $repo->SCM == 'Git' ?  $this->repo->getGitRevisionName($log->revision, $log->commit) : $log->revision;
+            if($revision == $log->revision) $revisionName = (strpos($repo->SCM, 'Git') !== false) ?  $this->repo->getGitRevisionName($log->revision, $log->commit) : $log->revision;
             $log->committer = zget($commiters, $log->committer, $log->committer);
             $i++;
         }
@@ -771,7 +771,7 @@ class repo extends control
         $this->scm->setEngine($repo);
 
         $branchID = '';
-        if($repo->SCM == 'Git' and empty($branchID))
+        if($repo->SCM == 'Git' and empty($branchID) or $repo->SCM == 'Gitlab')
         {
             $branches = $this->scm->branch();
             if($branches)
