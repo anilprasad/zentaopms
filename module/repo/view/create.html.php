@@ -10,10 +10,9 @@
 ?>
 <?php include '../../common/view/header.html.php';?>
 <?php include '../../common/view/kindeditor.html.php';?>
+<?php js::import($jsRoot . 'misc/base64.js');?>
 <?php if(common::checkNotCN()):?>
-<style>
-.user-addon{padding-right: 16px; padding-left: 16px;}
-</style>
+<style>.user-addon {padding-right: 16px; padding-left: 16px;}</style>
 <?php endif;?>
 <?php js::set('scm',  'Git')?>
 <div id='mainContent' class='main-row'>
@@ -29,13 +28,25 @@
             <td style="width:550px"><?php echo html::select('SCM', $lang->repo->scmList, 'Git', "onchange='scmChanged(this.value)' class='form-control'"); ?></td>
             <td class="tips-git"><?php echo $lang->repo->syncTips; ?></td>
           </tr>
+          <tr class='gitlab hide'>
+            <th><?php echo $lang->repo->gitlabHost;?></th>
+            <td><?php echo html::input('gitlabHost', 'http://192.168.1.161:51080', "class='form-control' placeholder='{$lang->repo->placeholder}'");?>
+          </tr>
+          <tr class='gitlab hide'>
+            <th><?php echo $lang->repo->gitlabToken;?></th>
+            <td><?php echo html::input('gitlabToken', '', "class='form-control'");?>
+          </tr>
+          <tr class='gitlab hide'>
+            <th><?php echo $lang->repo->gitlabProject;?></th>
+            <td><?php echo html::select('gitlabProject', array(''), '', "class='form-control chosen'");?>
+          </tr>
           <tr>
-            <th><?php echo $lang->repo->name; ?></th>
+            <th><?php echo $lang->repo->name;?></th>
             <td class='required'><?php echo html::input('name', '', "class='form-control'"); ?></td>
             <td></td>
           </tr>
-          <tr>
-            <th><?php echo $lang->repo->path; ?></th>
+          <tr class='hide-gitlab'>
+            <th><?php echo $lang->repo->path;?></th>
             <td class='required'><?php echo html::input('path', '', "class='form-control'"); ?></td>
             <td class='muted'>
                 <span class="tips-git"><?php echo $lang->repo->example->path->git;?></span>
@@ -47,7 +58,7 @@
             <td class='required'><?php echo html::input('encoding', 'utf-8', "class='form-control'"); ?></td>
             <td class='muted'><?php echo $lang->repo->encodingsTips; ?></td>
           </tr>
-          <tr>
+          <tr class='hide-gitlab'>
             <th><?php echo $lang->repo->client;?></th>
             <td class='required'><?php echo html::input('client', '', "class='form-control'")?></td>
             <td class='muted'>
@@ -55,11 +66,11 @@
                 <span class="tips-svn"><?php echo $lang->repo->example->client->svn;?></span>
             </td>
           </tr>
-          <tr class="account-fields">
+          <tr class="account-fields hide-gitlab">
             <th><?php echo $lang->repo->account;?></th>
             <td><?php echo html::input('account', '', "class='form-control'");?></td>
           </tr>
-          <tr class="account-fields">
+          <tr class="account-fields hide-gitlab">
             <th><?php echo $lang->repo->password;?></th>
             <td>
               <div class='input-group'>
