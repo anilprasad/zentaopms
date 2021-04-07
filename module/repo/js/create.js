@@ -16,10 +16,17 @@ $(function()
 
         $.get(url, function(response)
         {
-            $('#gitlabProject').append(response);
+            $('#gitlabProject').html('').append(response);
             $('#gitlabProject').chosen().trigger("chosen:updated");;
         });
     });
+    
+    $('#gitlabProject').change(function()
+    {
+        $option = $(this).find('option:selected');
+        $('#name').val($option.data('name'));
+    });
+    
 });
 
 function scmChanged(scm)

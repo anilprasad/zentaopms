@@ -967,14 +967,16 @@ class repo extends control
 	{
 		$host  = rtrim(helper::safe64Decode($host), '/');
 		$host .= '/api/v4/projects'; 
+
 		$projects = file_get_contents($host . "?private_token=$token");
 		$projects = json_decode($projects);
+
 		if(!$projects) $this->send(array('message' => array()));
 
 		$options = '';
 		foreach($projects as $project)
 		{
-			$options .= "<option value='{$project->id}'>{$project->name}:{$project->http_url_to_repo}</option>";
+			$options .= "<option value='{$project->id}' data-name='{$project->name}'>{$project->name}:{$project->http_url_to_repo}</option>";
 		}
 		die($options);
 	}

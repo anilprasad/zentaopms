@@ -191,10 +191,20 @@ class repoModel extends model
     {
         if(!$this->checkClient()) return false;
         if(!$this->checkConnection()) return false;
+        $data = fixer::input('post')
+            ->setIf($this->post->SCM == 'Gitlab', 'password', $this->post->gitlabToken)
+            ->setIf($this->post->SCM == 'Gitlab', 'client', $this->post->gitlabHost)
+            ->skipSpecial('path,client,account,password')
+            ->join('product', ',')
+            ->get();
 
-        $data = fixer::input('post')->setDefault('client', 'svn')->skipSpecial('path,client,account,password')->get();
+        $data->path = sprintf($this->config->repo->gitlab->apiPath, $data->gitlabHost, $data->gitlabProject);
+
+        unset($data->gitlabHost);
+        unset($data->gitlabToken);
+        unset($data->gitlabProject);
+
         $data->acl = empty($data->acl) ? '' : json_encode($data->acl);
-
         if($data->SCM == 'Subversion')
         {
             $scm = $this->app->loadClass('scm');
