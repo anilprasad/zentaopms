@@ -822,7 +822,7 @@ class repo extends control
         {
             if(!$repo->synced)
             {
-                if($repo->SCM == 'Git')
+                if($repo->SCM == 'Git' or $repo->SCM == 'Gitlab')
                 {
                     if($branchID) $this->repo->saveExistCommits4Branch($repo->id, $branchID);
 
