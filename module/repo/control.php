@@ -124,11 +124,17 @@ class repo extends control
         $this->repo->setMenu($this->repos, $repo->id, false);
         $this->app->loadLang('action');
 
-        $repo->repoType     = $repo->id . '-' . $repo->SCM;
-        $this->view->repo   = $repo;
-        $this->view->repoID = $repoID;
-        $this->view->groups = $this->loadModel('group')->getPairs();
-        $this->view->users  = $this->loadModel('user')->getPairs('noletter|noempty|nodeleted');
+        $projects = $this->repo->getGitlabProjects($repo->client, $repo->password);
+        $options  = array();
+        foreach($projects as $project) $options[$project->id] = $project->name . ':' . $project->http_url_to_repo;
+
+        $this->view->projects = $options;
+        $repo->repoType       = $repo->id . '-' . $repo->SCM;
+        $this->view->repo     = $repo;
+        $this->view->repoID   = $repoID;
+        $this->view->groups   = $this->loadModel('group')->getPairs();
+        $this->view->users    = $this->loadModel('user')->getPairs('noletter|noempty|nodeleted');
+
 
         $this->view->title      = $this->lang->repo->common . $this->lang->colon . $this->lang->repo->edit;
         $this->view->position[] = html::a(inlink('maintain'), $this->lang->repo->common);
@@ -965,11 +971,8 @@ class repo extends control
 	 */
 	public function ajaxGetGitlabProjects($host, $token)
 	{
-		$host  = rtrim(helper::safe64Decode($host), '/');
-		$host .= '/api/v4/projects'; 
-
-		$projects = file_get_contents($host . "?private_token=$token");
-		$projects = json_decode($projects);
+		$host  = helper::safe64Decode($host);
+        $projects = $this->repo->getGitlabProjects($host, $token);
 
 		if(!$projects) $this->send(array('message' => array()));
 

@@ -30,7 +30,7 @@
           </tr>
           <tr class='gitlab hide'>
             <th><?php echo $lang->repo->gitlabHost;?></th>
-            <td><?php echo html::input('gitlabHost', 'http://192.168.1.161:51080', "class='form-control' placeholder='{$lang->repo->placeholder}'");?>
+            <td><?php echo html::input('gitlabHost', '', "class='form-control' placeholder='{$lang->repo->placeholder}'");?>
           </tr>
           <tr class='gitlab hide'>
             <th><?php echo $lang->repo->gitlabToken;?></th>
